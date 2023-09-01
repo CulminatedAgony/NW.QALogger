@@ -14,6 +14,7 @@ namespace NW.QALogger
         private Color targetColor;
         private int step = 5;
         private string selectedItem;
+        private bool resetConfirmedCount = false;
 
         public MainApp()
         {
@@ -29,6 +30,7 @@ namespace NW.QALogger
             listBox1.SelectionMode = SelectionMode.One;
 
             textBox2.Text = Properties.Settings.Default.UserName;
+            button2.Click += new EventHandler(this.button2_Click);
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -110,6 +112,12 @@ namespace NW.QALogger
 
         private async void button1_Click(object sender, EventArgs e)
         {
+            if (resetConfirmedCount)
+            {
+                resetConfirmedCount = false;
+                return;
+            }
+
             if (selectedItem == null)
             {
                 MessageBox.Show("Please select in which channel it is located.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -118,7 +126,7 @@ namespace NW.QALogger
 
             if (string.IsNullOrWhiteSpace(textBox1.Text))
             {
-                MessageBox.Show("Please enter a link to the message of the request..", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Please enter a link to the message of the request.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -173,6 +181,13 @@ namespace NW.QALogger
                     MessageBox.Show("Error sending message: " + response.ReasonPhrase, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.ConfirmedCount = 0;
+            Properties.Settings.Default.Save();
+            resetConfirmedCount = true;
         }
     }
 }

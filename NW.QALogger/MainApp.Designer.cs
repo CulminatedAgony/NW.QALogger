@@ -37,6 +37,7 @@
             button1 = new Button();
             label3 = new Label();
             textBox2 = new TextBox();
+            button2 = new Button();
             SuspendLayout();
             // 
             // label1
@@ -113,7 +114,7 @@
             // 
             // button1
             // 
-            button1.Location = new Point(132, 307);
+            button1.Location = new Point(101, 312);
             button1.Name = "button1";
             button1.Size = new Size(75, 23);
             button1.TabIndex = 4;
@@ -141,13 +142,26 @@
             textBox2.TabIndex = 3;
             textBox2.TextChanged += textBox1_TextChanged;
             // 
+            // button2
+            // 
+            button2.BackColor = Color.Red;
+            button2.ForeColor = SystemColors.ButtonFace;
+            button2.Location = new Point(182, 312);
+            button2.Name = "button2";
+            button2.Size = new Size(75, 23);
+            button2.TabIndex = 4;
+            button2.Text = "RESET";
+            button2.UseVisualStyleBackColor = false;
+            button2.Click += button1_Click;
+            // 
             // MainApp
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.InfoText;
             BackgroundImageLayout = ImageLayout.Center;
-            ClientSize = new Size(366, 349);
+            ClientSize = new Size(366, 361);
+            Controls.Add(button2);
             Controls.Add(button1);
             Controls.Add(textBox2);
             Controls.Add(textBox1);
@@ -174,5 +188,6 @@
         private Button button1;
         private Label label3;
         private TextBox textBox2;
+        private Button button2;
     }
 }

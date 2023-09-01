@@ -3,10 +3,11 @@ using System.Drawing;
 using System.Net.Http;
 using System.Text;
 using System.Windows.Forms;
+using Newtonsoft.Json;
 
 namespace NW.QALogger
 {
-    public partial class Form1 : Form
+    public partial class MainApp : Form
     {
         private System.Windows.Forms.Timer timer;
         private Random random;
@@ -14,7 +15,7 @@ namespace NW.QALogger
         private int step = 5;
         private string selectedItem;
 
-        public Form1()
+        public MainApp()
         {
             InitializeComponent();
 
@@ -26,6 +27,8 @@ namespace NW.QALogger
             timer.Tick += Timer_Tick;
 
             listBox1.SelectionMode = SelectionMode.One;
+
+            textBox2.Text = Properties.Settings.Default.UserName;
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -97,38 +100,63 @@ namespace NW.QALogger
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
+            //nothing here :)
+        }
 
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+            //nothing here :)
         }
 
         private async void button1_Click(object sender, EventArgs e)
         {
             if (selectedItem == null)
             {
-                MessageBox.Show("Please select an item from the list.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Please select in which channel it is located.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(textBox1.Text))
             {
-                MessageBox.Show("Please enter a message in the text box.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Please enter a link to the message of the request..", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            string webhookUrl = "your_webhook_url_here";
+            if (string.IsNullOrWhiteSpace(textBox2.Text))
+            {
+                MessageBox.Show("Please enter a username.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            string webhookUrl = "https://discord.com/api/webhooks/1147200680537362495/wP5JtVwOsoFyo5j_LkdfPzReZojzTNLng-u6w1Ep4QAvWWqsnf1TS48IhyhGk0s-Fdvi";
 
             string reaction = checkBox1.Checked ? "✅" : (checkBox2.Checked ? "❌" : "");
+
+            Properties.Settings.Default.ConfirmedCount++;
+            Properties.Settings.Default.UserName = textBox2.Text;
+            Properties.Settings.Default.Save();
+
             string content = JsonConvert.SerializeObject(new
             {
                 content = " ",
                 embeds = new[]
                 {
-            new
+        new
+        {
+            author = new
             {
-                title = "New Message",
-                description = $"Channel: {selectedItem}\nMessage: {textBox1.Text}\nReacted: {reaction}",
-                color = 0xFF0000,
+                name = $"Logged by: {Properties.Settings.Default.UserName}"
+            },
+            title = "Logged-Ticket",
+            description = $"Channel: {selectedItem}\nReacted: {reaction}",
+            url = textBox1.Text,
+            color = 0xFF0000,
+            footer = new
+            {
+                text = $"Confirmed: {Properties.Settings.Default.ConfirmedCount}"
             }
         }
+    }
             });
 
             using (HttpClient client = new HttpClient())

@@ -1,6 +1,6 @@
 ﻿namespace NW.QALogger
 {
-    partial class Form1
+    partial class MainApp
     {
         /// <summary>
         ///  Required designer variable.
@@ -35,6 +35,8 @@
             textBox1 = new TextBox();
             label2 = new Label();
             button1 = new Button();
+            label3 = new Label();
+            textBox2 = new TextBox();
             SuspendLayout();
             // 
             // label1
@@ -91,7 +93,7 @@
             // 
             // textBox1
             // 
-            textBox1.Location = new Point(27, 213);
+            textBox1.Location = new Point(33, 268);
             textBox1.Name = "textBox1";
             textBox1.Size = new Size(303, 23);
             textBox1.TabIndex = 3;
@@ -101,7 +103,7 @@
             // 
             label2.Font = new Font("Segoe UI Emoji", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label2.ForeColor = Color.Snow;
-            label2.Location = new Point(12, 189);
+            label2.Location = new Point(12, 244);
             label2.Name = "label2";
             label2.Size = new Size(150, 21);
             label2.TabIndex = 0;
@@ -111,7 +113,7 @@
             // 
             // button1
             // 
-            button1.Location = new Point(127, 258);
+            button1.Location = new Point(132, 307);
             button1.Name = "button1";
             button1.Size = new Size(75, 23);
             button1.TabIndex = 4;
@@ -119,21 +121,43 @@
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
-            // Form1
+            // label3
+            // 
+            label3.Font = new Font("Segoe UI Emoji", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label3.ForeColor = Color.Snow;
+            label3.Location = new Point(27, 185);
+            label3.Name = "label3";
+            label3.Size = new Size(83, 21);
+            label3.TabIndex = 0;
+            label3.Text = "Username";
+            label3.TextAlign = ContentAlignment.TopCenter;
+            label3.Click += label1_Click;
+            // 
+            // textBox2
+            // 
+            textBox2.Location = new Point(33, 209);
+            textBox2.Name = "textBox2";
+            textBox2.Size = new Size(303, 23);
+            textBox2.TabIndex = 3;
+            textBox2.TextChanged += textBox1_TextChanged;
+            // 
+            // MainApp
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.InfoText;
             BackgroundImageLayout = ImageLayout.Center;
-            ClientSize = new Size(360, 450);
+            ClientSize = new Size(366, 349);
             Controls.Add(button1);
+            Controls.Add(textBox2);
             Controls.Add(textBox1);
             Controls.Add(checkBox2);
             Controls.Add(checkBox1);
             Controls.Add(listBox1);
+            Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(label1);
-            Name = "Form1";
+            Name = "MainApp";
             Text = "QA Logger";
             ResumeLayout(false);
             PerformLayout();
@@ -148,5 +172,7 @@
         private TextBox textBox1;
         private Label label2;
         private Button button1;
+        private Label label3;
+        private TextBox textBox2;
     }
 }

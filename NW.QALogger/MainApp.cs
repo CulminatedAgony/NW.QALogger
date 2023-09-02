@@ -29,8 +29,19 @@ namespace NW.QALogger
 
             listBox1.SelectionMode = SelectionMode.One;
 
+            DateTime currentDate = DateTime.Now;
+            DateTime lastDate = Properties.Settings.Default.LastDate;
+
+            if (currentDate.Date.Day == 1 && currentDate.Date != lastDate.Date)
+            {
+                Properties.Settings.Default.ConfirmedCount = 0;
+            }
+
             textBox2.Text = Properties.Settings.Default.UserName;
             button2.Click += new EventHandler(this.button2_Click);
+
+            Properties.Settings.Default.LastDate = currentDate.Date;
+            Properties.Settings.Default.Save();
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -110,6 +121,8 @@ namespace NW.QALogger
             //nothing here :)
         }
 
+        private string previousMessageLink = "";
+
         private async void button1_Click(object sender, EventArgs e)
         {
             if (resetConfirmedCount)
@@ -136,11 +149,15 @@ namespace NW.QALogger
                 return;
             }
 
+            if (textBox1.Text != previousMessageLink)
+            {
+                Properties.Settings.Default.ConfirmedCount++;
+            }
+
             string webhookUrl = "https://discord.com/api/webhooks/1147200680537362495/wP5JtVwOsoFyo5j_LkdfPzReZojzTNLng-u6w1Ep4QAvWWqsnf1TS48IhyhGk0s-Fdvi";
 
             string reaction = checkBox1.Checked ? "✅" : (checkBox2.Checked ? "❌" : "");
 
-            Properties.Settings.Default.ConfirmedCount++;
             Properties.Settings.Default.UserName = textBox2.Text;
             Properties.Settings.Default.Save();
 
@@ -149,22 +166,22 @@ namespace NW.QALogger
                 content = " ",
                 embeds = new[]
                 {
-        new
-        {
-            author = new
+            new
             {
-                name = $"Logged by: {Properties.Settings.Default.UserName}"
-            },
-            title = "Logged-Ticket",
-            description = $"Channel: {selectedItem}\nReacted: {reaction}",
-            url = textBox1.Text,
-            color = 0xFF0000,
-            footer = new
-            {
-                text = $"Confirmed: {Properties.Settings.Default.ConfirmedCount}"
+                author = new
+                {
+                    name = $"Logged by: {Properties.Settings.Default.UserName}"
+                },
+                title = "Logged-Ticket",
+                description = $"Channel: {selectedItem}\nReacted: {reaction}",
+                url = textBox1.Text,
+                color = 0xFF0000,
+                footer = new
+                {
+                    text = $"Confirmed: {Properties.Settings.Default.ConfirmedCount}"
+                }
             }
         }
-    }
             });
 
             using (HttpClient client = new HttpClient())
@@ -175,6 +192,7 @@ namespace NW.QALogger
                 if (response.IsSuccessStatusCode)
                 {
                     MessageBox.Show("Message sent successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    previousMessageLink = textBox1.Text;
                 }
                 else
                 {

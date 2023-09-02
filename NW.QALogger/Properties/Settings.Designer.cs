@@ -46,5 +46,16 @@ namespace NW.QALogger.Properties {
                 this["UserName"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.DateTime LastDate {
+            get {
+                return ((global::System.DateTime)(this["LastDate"]));
+            }
+            set {
+                this["LastDate"] = value;
+            }
+        }
     }
 }

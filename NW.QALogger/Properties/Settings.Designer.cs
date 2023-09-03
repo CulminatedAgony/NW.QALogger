@@ -57,5 +57,17 @@ namespace NW.QALogger.Properties {
                 this["LastDate"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int QARequestCount {
+            get {
+                return ((int)(this["QARequestCount"]));
+            }
+            set {
+                this["QARequestCount"] = value;
+            }
+        }
     }
 }

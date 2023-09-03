@@ -35,6 +35,7 @@ namespace NW.QALogger
             if (currentDate.Date.Day == 1 && currentDate.Date != lastDate.Date)
             {
                 Properties.Settings.Default.ConfirmedCount = 0;
+                Properties.Settings.Default.QARequestCount = 0;
             }
 
             textBox2.Text = Properties.Settings.Default.UserName;
@@ -111,6 +112,11 @@ namespace NW.QALogger
             }
         }
 
+        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        {
+            //nothing here :)
+        }
+
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             //nothing here :)
@@ -131,16 +137,19 @@ namespace NW.QALogger
                 return;
             }
 
-            if (selectedItem == null)
+            if (!checkBox3.Checked)
             {
-                MessageBox.Show("Please select in which channel it is located.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+                if (selectedItem == null)
+                {
+                    MessageBox.Show("Please select in which channel it is located.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
-            if (string.IsNullOrWhiteSpace(textBox1.Text))
-            {
-                MessageBox.Show("Please enter a link to the message of the request.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                if (string.IsNullOrWhiteSpace(textBox1.Text))
+                {
+                    MessageBox.Show("Please enter a link to the message of the request.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
             }
 
             if (string.IsNullOrWhiteSpace(textBox2.Text))
@@ -149,7 +158,7 @@ namespace NW.QALogger
                 return;
             }
 
-            if (textBox1.Text != previousMessageLink)
+            if (!checkBox3.Checked && textBox1.Text != previousMessageLink)
             {
                 Properties.Settings.Default.ConfirmedCount++;
             }
@@ -160,6 +169,18 @@ namespace NW.QALogger
 
             Properties.Settings.Default.UserName = textBox2.Text;
             Properties.Settings.Default.Save();
+
+            string title = "Logged-Ticket";
+            string description = $"Channel: {selectedItem}\nReacted: {reaction}";
+            string footerText = $"Confirmed: {Properties.Settings.Default.ConfirmedCount}";
+
+            if (checkBox3.Checked)
+            {
+                title = "QA-Request";
+                description = $"Reacted: {reaction}";
+                footerText = $"Confirmed QA requests: {Properties.Settings.Default.QARequestCount}";
+                Properties.Settings.Default.QARequestCount++;
+            }
 
             string content = JsonConvert.SerializeObject(new
             {
@@ -172,13 +193,13 @@ namespace NW.QALogger
                 {
                     name = $"Logged by: {Properties.Settings.Default.UserName}"
                 },
-                title = "Logged-Ticket",
-                description = $"Channel: {selectedItem}\nReacted: {reaction}",
+                title = title,
+                description = description,
                 url = textBox1.Text,
                 color = 0xFF0000,
                 footer = new
                 {
-                    text = $"Confirmed: {Properties.Settings.Default.ConfirmedCount}"
+                    text = footerText
                 }
             }
         }
@@ -199,6 +220,8 @@ namespace NW.QALogger
                     MessageBox.Show("Error sending message: " + response.ReasonPhrase, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+
+            Properties.Settings.Default.Save();
         }
 
         private void button2_Click(object sender, EventArgs e)
